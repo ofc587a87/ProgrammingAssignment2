@@ -3,7 +3,7 @@
 ## URL: https://github.com/ofc587a87/ProgrammingAssignment2
 
 ## this function create a matrix capable of storing a cache of its own inverse
-
+## it does not makes any calculation or checking, it's just a container
 makeCacheMatrix <- function(x = matrix()) {
     
     # inverse cache
@@ -16,7 +16,7 @@ makeCacheMatrix <- function(x = matrix()) {
         inverse <<- NULL
     }
     
-    # return current matriox (not inverse)
+    # return current matrix (not inverse)
     get <- function() { x }
     
     # sets and save cache of the inverse matrix
@@ -25,7 +25,7 @@ makeCacheMatrix <- function(x = matrix()) {
     }
     
     # get current inverse.
-    # return NULL if the inverse has notr been set
+    # return NULL if the inverse has not been set
     getInverse <- function() { inverse }
     
     # return list of existing functions
@@ -37,31 +37,36 @@ makeCacheMatrix <- function(x = matrix()) {
 
 ## Return a matrix that is the inverse of 'x'
 ## this function does not cache anything
-
+## The ... parameters are passed to the internal solve function
 cacheSolve <- function(x, ...) {
-    # get current inverse (if cached)
+    
+    # get current inverse (cached or not)
     result = x$getInverse()
     
-    # if it's cached, return data
+    # if it's cached (not null), return it
     if(!is.null(result)) {
         return(result)
     }
     
-    # it's not cached, solve ans save it
+    # it's not cached: solve it.
+    # Pass ... arguments to solve
     result <- solve(x$get(), ...)
+    
+    # save result in object's cache and return it
     x$setInverse(result)
     result;
 }
 
+
+
 #Internal function to test development
 testSolve <- function() {
     
+    # creates random sample matrices
+    # It may fail if the random matrix if identical (just execute the test method again)
     set.seed(Sys.time())
-    
     ncols1<-floor(runif(1, 4, 300));
     ncols2<-floor(runif(1, 4, 300));
-    
-    # creates sample matrices
     message(paste("Generating matrix 1 of" , ncols1 , "cols/rows"))
     M1 <- replicate(ncols1, floor(runif(ncols1, 0, 15)))
     message(paste("Generating matrix 2 of" , ncols2 , "cols/rows"))
